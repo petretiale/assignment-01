@@ -1,15 +1,15 @@
 package pcd.sketch01.view;
 
 
-import pcd.sketch01.controller.Controller;
+import pcd.sketch01.controller.ActiveController;
 
 public class View {
 
 	private ViewFrame frame;
 	private ViewModel viewModel;
-    private Controller controller;
+    private ActiveController controller;
 	
-	public View(ViewModel model,Controller controller, int w, int h) {
+	public View(ViewModel model, ActiveController controller, int w, int h) {
 		frame = new ViewFrame(model, controller, w, h);
 		frame.setVisible(true);
 		this.viewModel = model;

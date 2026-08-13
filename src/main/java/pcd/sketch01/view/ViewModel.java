@@ -3,6 +3,7 @@ package pcd.sketch01.view;
 import pcd.sketch01.model.Board;
 import pcd.sketch01.model.Hole;
 import pcd.sketch01.model.P2d;
+import pcd.sketch01.model.PlayerId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class ViewModel {
     private List<Hole> holes;
     private int humanScore;
     private int botScore;
+    private boolean gameOver;
+    private PlayerId winner;
 	
 	public ViewModel() {
 		balls = new ArrayList<>();
@@ -24,6 +27,8 @@ public class ViewModel {
 		framePerSec = 0;
         botScore = 0;
         humanScore = 0;
+        gameOver = false;
+        winner = PlayerId.NONE;
 	}
 	
 	public synchronized void update(Board board, int framePerSec) {
@@ -38,6 +43,9 @@ public class ViewModel {
         this.holes = new ArrayList<>(board.getHoles());
         humanScore = board.getHumanScore();
         botScore = board.getBotScore();
+
+        this.gameOver = board.isGameOver();
+        this.winner = board.getWinner();
 	}
 	
 	public synchronized ArrayList<BallViewInfo> getBalls(){
@@ -66,4 +74,13 @@ public class ViewModel {
     public synchronized int getBotScore() {
         return botScore;
     }
+
+    public synchronized boolean isGameOver() {
+        return gameOver;
+    }
+
+    public synchronized PlayerId getWinner() {
+        return winner;
+    }
+
 }

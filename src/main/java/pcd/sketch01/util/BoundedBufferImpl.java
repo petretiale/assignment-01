@@ -27,10 +27,10 @@ public class BoundedBufferImpl<Item> implements BoundedBuffer<Item> {
 		notifyAll();
 	}
 
-	public synchronized Item get() throws InterruptedException {
-		while (isEmpty()) {
-			wait();
-		}
+	public synchronized Item poll() {
+		if (isEmpty()) {
+            return null;
+        }
 		Item item = buffer.removeFirst();
 		notifyAll();
 		return item;

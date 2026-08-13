@@ -13,10 +13,15 @@ public class Board {
     private int humanScore;
     private int botScore;
 
+    private boolean gameOver;
+    private PlayerId winner;
+
     public Board(){
         holes = new ArrayList<>();
         humanScore = 0;
         botScore = 0;
+        gameOver = false;
+        winner = PlayerId.NONE;
     }
     
     public void init(BoardConf conf) {
@@ -33,6 +38,10 @@ public class Board {
     }
     
     public void updateState(long dt) {
+
+        if (gameOver) {
+            return;
+        }
 
     	playerBall.updateState(dt, this);
     	for (var b: balls) {
@@ -61,12 +70,23 @@ public class Board {
                 iterator.remove();
             }
         }
-
+        // Controllo se la pallina del giocatore cade in buca (vince la pallina che non è finita in buca)
         if (isInsideAnyHole(playerBall)) {
-            // finita la partita
-            //todo: da gestire la fine della partita se uno dei playrer finisce in buca
+            gameOver = true;
+            this.winner = (playerBall.getOwner() == PlayerId.HUMAN) ? PlayerId.BOT : PlayerId.HUMAN;
         }
 
+        // controllo fine palline (vince chi ha il punteggio piu alto)
+        if (balls.isEmpty()) {
+            gameOver = true;
+            if (humanScore > botScore) {
+                this.winner = PlayerId.HUMAN;
+            } else if (botScore > humanScore) {
+                this.winner = PlayerId.BOT;
+            } else {
+                this.winner = PlayerId.NONE;
+            }
+        }
     }
 
     private boolean isInsideAnyHole(Ball ball) {
@@ -98,4 +118,8 @@ public class Board {
     public int getHumanScore() { return humanScore; }
 
     public int getBotScore() { return botScore; }
+
+    public boolean isGameOver() { return gameOver; }
+
+    public PlayerId getWinner() { return winner; }
 }

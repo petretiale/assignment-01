@@ -1,10 +1,11 @@
 package pcd.sketch01.view;
 
-import pcd.sketch01.controller.Controller;
+import pcd.sketch01.controller.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import pcd.sketch01.model.PlayerId;
 
 public class ViewFrame extends JFrame {
 
@@ -12,9 +13,9 @@ public class ViewFrame extends JFrame {
     private VisualiserPanel panel;
     private ViewModel model;
     private RenderSynch sync;
-    private Controller controller;
+    private ActiveController controller;
     
-    public ViewFrame(ViewModel model, Controller controller, int w, int h){
+    public ViewFrame(ViewModel model, ActiveController controller, int w, int h){
     	this.model = model;
     	this.sync = new RenderSynch();
         this.controller = controller;
@@ -38,16 +39,16 @@ public class ViewFrame extends JFrame {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        controller.moveUp();
+                        controller.notifyNewCmd(new MoveUpCmd());
                         break;
                     case KeyEvent.VK_DOWN:
-                        controller.moveDown();
+                        controller.notifyNewCmd(new MoveDownCmd());
                         break;
                     case KeyEvent.VK_RIGHT:
-                        controller.moveRight();
+                        controller.notifyNewCmd(new MoveRightCmd());
                         break;
                     case KeyEvent.VK_LEFT:
-                        controller.moveLeft();
+                        controller.notifyNewCmd(new MoveLeftCmd());
                         break;
                 }
             }
@@ -131,6 +132,30 @@ public class ViewFrame extends JFrame {
                 g2.setStroke(new BasicStroke(1));
 	    		g2.drawString("Num small balls: " + model.getBalls().size(), 550, 40);
 	    		g2.drawString("Frame per sec: " + model.getFramePerSec(), 550, 60);
+
+                // disegno fine partita
+                if (model.isGameOver()) {
+                    g2.setColor(new Color(0, 0, 0, 180)); // Overlay semi-trasparente
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+
+                    g2.setColor(Color.WHITE);
+                    g2.setFont(new Font("Arial", Font.BOLD, 36));
+
+                    String msg = "GAME OVER";
+                    if (model.getWinner() == PlayerId.HUMAN) {
+                        msg = "VICTORY! Human Wins!";
+                        g2.setColor(Color.GREEN);
+                    } else if (model.getWinner() == PlayerId.BOT) {
+                        msg = "DEFEAT! Bot Wins!";
+                        g2.setColor(Color.RED);
+                    } else {
+                        msg = "GAME OVER - DRAW!";
+                    }
+
+                    FontMetrics fm = g2.getFontMetrics();
+                    int x = (getWidth() - fm.stringWidth(msg)) / 2;
+                    g2.drawString(msg, x, getHeight() / 2);
+                }
 
 	    		sync.notifyFrameRendered();
     		
