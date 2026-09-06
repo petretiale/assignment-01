@@ -1,10 +1,7 @@
 package pcd.sketch01;
 
 import pcd.sketch01.controller.ActiveController;
-import pcd.sketch01.model.Board;
-import pcd.sketch01.model.LargeBoardConf;
-import pcd.sketch01.model.MassiveBoardConf;
-import pcd.sketch01.model.MinimalBoardConf;
+import pcd.sketch01.model.*;
 import pcd.sketch01.view.View;
 import pcd.sketch01.view.ViewModel;
 
@@ -20,9 +17,9 @@ public class Sketch01 {
 		 * - massive: 4500 small balls
 		 */
 
-		var boardConf = new MinimalBoardConf();
+		//var boardConf = new MinimalBoardConf();
         //var boardConf = new LargeBoardConf();
-        //var boardConf = new MassiveBoardConf();
+        var boardConf = new MassiveBoardConf();
 
 		Board board = new Board();
 		board.init(boardConf);
@@ -35,6 +32,9 @@ public class Sketch01 {
 
         controller.setView(view);
         controller.start();
+
+        Bot bot = new Bot(controller);
+		bot.start();
 
 						
 //		viewModel.update(board, 0);

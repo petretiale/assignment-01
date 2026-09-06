@@ -14,6 +14,7 @@ public class ViewModel {
 
 	private ArrayList<BallViewInfo> balls;
 	private BallViewInfo player;
+    private BallViewInfo bot;
 	private int framePerSec;
     private List<Hole> holes;
     private int humanScore;
@@ -39,6 +40,8 @@ public class ViewModel {
 		this.framePerSec = framePerSec;
 		var p = board.getPlayerBall();
 		player = new BallViewInfo(p.getPos(), p.getRadius());
+        var b = board.getBotBall();
+        bot = new BallViewInfo(b.getPos(), b.getRadius());
 
         this.holes = new ArrayList<>(board.getHoles());
         humanScore = board.getHumanScore();
@@ -62,6 +65,10 @@ public class ViewModel {
 	public synchronized BallViewInfo getPlayerBall() {
 		return player;
 	}
+
+    public synchronized BallViewInfo getBotBall() {
+        return bot;
+    }
 
     public synchronized List<Hole> getHoles() {
         return holes;

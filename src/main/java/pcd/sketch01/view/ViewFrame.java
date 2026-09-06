@@ -113,6 +113,15 @@ public class ViewFrame extends JFrame {
 	                int radiusY = (int)(pb.radius()*delta);
 	                g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX*2,radiusY*2);
 	    		}
+                var bb = model.getBotBall();
+                if (bb != null) {
+                    var p1 = bb.pos();
+                    int x0 = (int)(ox + p1.x()*delta);
+                    int y0 = (int)(oy - p1.y()*delta);
+                    int radiusX = (int)(bb.radius()*delta);
+                    int radiusY = (int)(bb.radius()*delta);
+                    g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX*2,radiusY*2);
+                }
                 // Disegna le buche
                 g2.setColor(Color.BLACK);
                 for (var hole : model.getHoles()) {

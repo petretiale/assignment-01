@@ -8,6 +8,7 @@ public class Board {
     private static final double HOLE_RADIUS = 0.25;
     private List<Ball> balls;    
     private Ball playerBall;
+    private Ball botBall;
     private Boundary bounds;
     private List<Hole> holes;
     private int humanScore;
@@ -26,7 +27,8 @@ public class Board {
     
     public void init(BoardConf conf) {
     	balls = conf.getSmallBalls();    	
-    	playerBall = conf.getPlayerBall(); 
+    	playerBall = conf.getPlayerBall();
+        botBall = conf.getBotBall();
     	bounds = conf.getBoardBoundary();
 
         // creazione delle 2 buche
@@ -44,6 +46,7 @@ public class Board {
         }
 
     	playerBall.updateState(dt, this);
+        botBall.updateState(dt, this);
     	for (var b: balls) {
     		b.updateState(dt, this);
     	}       	
@@ -55,7 +58,10 @@ public class Board {
         }
     	for (var b: balls) {
     		Ball.resolveCollision(playerBall, b);
+            Ball.resolveCollision(botBall, b);
     	}
+
+        Ball.resolveCollision(playerBall, botBall);
         // toglie tutti gli elementi della lista che soddisfano il predicato
 //        balls.removeIf(ball -> isInsideAnyHole(ball));
         var iterator = balls.iterator();
@@ -74,6 +80,10 @@ public class Board {
         if (isInsideAnyHole(playerBall)) {
             gameOver = true;
             this.winner = (playerBall.getOwner() == PlayerId.HUMAN) ? PlayerId.BOT : PlayerId.HUMAN;
+        }
+        if (isInsideAnyHole(botBall)) {
+            gameOver = true;
+            this.winner = (botBall.getOwner() == PlayerId.BOT) ? PlayerId.HUMAN : PlayerId.BOT;
         }
 
         // controllo fine palline (vince chi ha il punteggio piu alto)
@@ -106,7 +116,11 @@ public class Board {
     public Ball getPlayerBall() {
     	return playerBall;
     }
-    
+
+    public Ball getBotBall() {
+        return botBall;
+    }
+
     public  Boundary getBounds(){
         return bounds;
     }
