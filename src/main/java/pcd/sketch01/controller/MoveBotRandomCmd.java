@@ -8,7 +8,7 @@ import java.util.Random;
 public class MoveBotRandomCmd implements Cmd{
 
     private static final double KICK_STRENGTH = 1.5;
-    private final Random rand = new Random(2);;
+    private final Random rand = new Random(2);
 
     @Override
     public void execute(Board board) {
