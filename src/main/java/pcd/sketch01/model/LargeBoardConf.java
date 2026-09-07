@@ -7,7 +7,7 @@ public class LargeBoardConf implements BoardConf {
 
 	@Override
 	public Ball getPlayerBall() {
-		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,1), PlayerId.HUMAN);
+		return  new Ball(new P2d(-0.6 , -0.75), 0.05, 1.5, new V2d(0,0), PlayerId.HUMAN);
 	}
 
 	@Override
@@ -18,13 +18,18 @@ public class LargeBoardConf implements BoardConf {
     	for (int row = 0; row < 20; row++) {
     		for (int col = 0; col < 20; col++) {
         		var px = -0.25 + col*0.025;
-        		var py =  row*0.025;
+        		var py =  row * 0.025;
         		var b = new Ball(new P2d(px, py), ballRadius, 0.25, new V2d(0,0), PlayerId.NONE);
             	balls.add(b);    			
     		}
     	}		
     	return balls;
 	}
+
+    @Override
+    public Ball getBotBall() {
+        return new Ball(new P2d(0.6, -0.75), 0.05, 1.5, new V2d(0,0), PlayerId.BOT);
+    }
 
 	public Boundary getBoardBoundary() {
         return new Boundary(-1.5,-1.0,1.5,1.0);

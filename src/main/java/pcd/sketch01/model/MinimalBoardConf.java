@@ -7,7 +7,7 @@ public class MinimalBoardConf implements BoardConf {
 
 	@Override
 	public Ball getPlayerBall() {
-    	return new Ball(new P2d(0, 0), 0.06, 1, new V2d(0,0.5), PlayerId.HUMAN);
+    	return new Ball(new P2d(0, 0), 0.05, 1.5, new V2d(0,0), PlayerId.HUMAN);
 	}
 
 	@Override
@@ -20,7 +20,12 @@ public class MinimalBoardConf implements BoardConf {
     	return balls;
 	}
 
-	@Override
+    @Override
+    public Ball getBotBall() {
+        return new Ball(new P2d(0.5, 0.5), 0.05, 1.5, new V2d(0,0), PlayerId.BOT);
+    }
+
+    @Override
 	public Boundary getBoardBoundary() {
         return new Boundary(-1.5,-1.0,1.5,1.0);
 	}

@@ -135,17 +135,16 @@ public class Ball {
 	        	a.vel = new V2d(a.vel.x() - (imp / a.mass) * nx, a.vel.y() - (imp / a.mass) * ny);                
 	        	b.vel = new V2d(b.vel.x() + (imp / b.mass) * nx, b.vel.y() + (imp / b.mass) * ny);
 	        }
-        }
 
-        if (a.getOwner() != PlayerId.NONE && b.getOwner() == PlayerId.NONE) {
-            b.setLastTouchedBy(a.getOwner());
-        } else if (b.getOwner() != PlayerId.NONE && a.getOwner() == PlayerId.NONE) {
-            a.setLastTouchedBy(b.getOwner());
-        } else if (a.getOwner() == PlayerId.NONE && b.getOwner() == PlayerId.NONE) {
-            a.setLastTouchedBy(PlayerId.NONE);
-            b.setLastTouchedBy(PlayerId.NONE);
+            if (a.getOwner() != PlayerId.NONE && b.getOwner() == PlayerId.NONE) {
+                b.setLastTouchedBy(a.getOwner());
+            } else if (b.getOwner() != PlayerId.NONE && a.getOwner() == PlayerId.NONE) {
+                a.setLastTouchedBy(b.getOwner());
+            } else if (a.getOwner() == PlayerId.NONE && b.getOwner() == PlayerId.NONE) {
+                a.setLastTouchedBy(PlayerId.NONE);
+                b.setLastTouchedBy(PlayerId.NONE);
+            }
         }
-
     }
 
     

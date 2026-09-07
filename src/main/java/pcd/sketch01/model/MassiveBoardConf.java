@@ -7,7 +7,7 @@ public class MassiveBoardConf implements BoardConf {
 
 	@Override
 	public Ball getPlayerBall() {
-		return  new Ball(new P2d(0, -0.75), 0.05, 1.5, new V2d(0,0), PlayerId.HUMAN);
+		return  new Ball(new P2d(-0.6 , -0.75), 0.05, 1.5, new V2d(0,0), PlayerId.HUMAN);
 	}
 
 	@Override
@@ -25,6 +25,11 @@ public class MassiveBoardConf implements BoardConf {
     	}		
     	return balls;
 	}
+
+    @Override
+    public Ball getBotBall() {
+        return new Ball(new P2d(0.6, -0.75), 0.05, 1.5, new V2d(0,0), PlayerId.BOT);
+    }
 
 	public Boundary getBoardBoundary() {
         return new Boundary(-1.5,-1.0,1.5,1.0);

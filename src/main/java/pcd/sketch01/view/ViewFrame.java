@@ -9,17 +9,14 @@ import pcd.sketch01.model.PlayerId;
 
 public class ViewFrame extends JFrame {
 
-    private static final double KICK_STRENGTH = 1.5;
     private VisualiserPanel panel;
     private ViewModel model;
     private RenderSynch sync;
-    private ActiveController controller;
-    
+
     public ViewFrame(ViewModel model, ActiveController controller, int w, int h){
     	this.model = model;
     	this.sync = new RenderSynch();
-        this.controller = controller;
-    	setTitle("Sketch 03");
+        setTitle("Sketch 03");
         setSize(w,h + 25);
         setResizable(false);
         panel = new VisualiserPanel(w,h);
@@ -111,8 +108,21 @@ public class ViewFrame extends JFrame {
 		            int y0 = (int)(oy - p1.y()*delta);
 	                int radiusX = (int)(pb.radius()*delta);
 	                int radiusY = (int)(pb.radius()*delta);
-	                g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX*2,radiusY*2);
+	                g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX * 2,radiusY * 2);
 	    		}
+
+                g2.setColor(Color.RED);
+                g2.setStroke(new BasicStroke(3));
+                var bp = model.getBotBall();
+                if (bp != null) {
+                    var p2 = bp.pos();
+                    int x0 = (int)(ox + p2.x()*delta);
+                    int y0 = (int)(oy - p2.y()*delta);
+                    int radiusX = (int)(bp.radius()*delta);
+                    int radiusY = (int)(bp.radius()*delta);
+                    g2.drawOval(x0 - radiusX,y0 - radiusY,radiusX * 2,radiusY * 2);
+                }
+
                 // Disegna le buche
                 g2.setColor(Color.BLACK);
                 for (var hole : model.getHoles()) {
