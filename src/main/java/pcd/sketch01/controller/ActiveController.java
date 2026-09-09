@@ -26,7 +26,7 @@ public class ActiveController extends Thread {
 
     @Override
     public void run() {
-// perchè farlo qui e non in view come in sketch 2?
+    // perchè farlo qui e non in view come in sketch 2?
         viewModel.update(board, 0);
         view.render();
         waitAbit();
