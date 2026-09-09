@@ -15,10 +15,11 @@ public class Barrier {
     public synchronized void await() throws InterruptedException {
 
         waiting++;
-        if (waiting == totalParticipants) {
-            waiting = 0;
-            notifyAll();
+        while (waiting < totalParticipants) {
+            wait();
         }
+        System.out.println("in barriera:" + waiting);
+        waiting = 0;
+        notifyAll();
     }
-
 }
