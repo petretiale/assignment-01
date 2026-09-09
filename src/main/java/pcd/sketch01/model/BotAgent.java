@@ -24,11 +24,6 @@ public class BotAgent extends Thread {
                 // Attesa asincrona tra una mossa e l'altra
                 Thread.sleep(1500);
 
-                if (board.isGameOver()) {
-                    break;
-                }
-
-                // Sceglie a caso una delle 4 direzioni
                 Cmd cmd = chooseRandomMove();
                 controller.notifyNewCmd(cmd);
 
