@@ -13,9 +13,9 @@ public class Board {
     private List<Hole> holes;
     private int humanScore;
     private int botScore;
-
     private boolean gameOver;
     private PlayerId winner;
+    private List<Worker> workers;
 
     public Board(){
         holes = new ArrayList<>();
@@ -30,6 +30,7 @@ public class Board {
     	playerBall = conf.getPlayerBall();
         botBall = conf.getBotBall();
     	bounds = conf.getBoardBoundary();
+        workers = createWorkers();
 
         // creazione delle 2 buche
 
@@ -41,21 +42,36 @@ public class Board {
     
     public void updateState(long dt) {
 
+        System.out.println(Runtime.getRuntime().availableProcessors());
+
         if (gameOver) {
             return;
         }
 
-    	playerBall.updateState(dt, this);
-        botBall.updateState(dt, this);
-    	for (var b: balls) {
-    		b.updateState(dt, this);
-    	}       	
-    	
-    	for (int i = 0; i < balls.size() - 1; i++) {
-            for (int j = i + 1; j < balls.size(); j++) {
-                Ball.resolveCollision(balls.get(i), balls.get(j));
-            }
+        for (var w : workers) {
+            w.setDt(dt);
+            w.start();
         }
+        try {
+            for (var w: workers) {
+                w.join();
+            }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
+
+
+        playerBall.updateState(dt, this);
+        botBall.updateState(dt, this);
+//    	for (var b: balls) {
+//    		b.updateState(dt, this);
+//    	}
+//
+//    	for (int i = 0; i < balls.size() - 1; i++) {
+//            for (int j = i + 1; j < balls.size(); j++) {
+//                Ball.resolveCollision(balls.get(i), balls.get(j));
+//            }
+//        }
     	for (var b: balls) {
     		Ball.resolveCollision(playerBall, b);
             Ball.resolveCollision(botBall, b);
@@ -119,11 +135,25 @@ public class Board {
         }
         return false;
     }
+
+    private List<Worker> createWorkers() {
+
+        List<Worker> workers = new ArrayList<>();
+        int nWorkers = Runtime.getRuntime().availableProcessors();
+        Barrier updateBallBarrier = new Barrier(nWorkers);
+        Barrier resolveCollisionBarrier = new Barrier(nWorkers);
+
+
+        for (int i = 0; i < nWorkers; i++) {
+            workers.add(new Worker(i, nWorkers, this, updateBallBarrier, resolveCollisionBarrier));
+        }
+        return workers;
+    }
     
     public List<Ball> getBalls(){
     	return balls;
     }
-    
+
     public Ball getPlayerBall() {
     	return playerBall;
     }

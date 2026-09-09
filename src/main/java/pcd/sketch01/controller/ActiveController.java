@@ -1,10 +1,14 @@
 package pcd.sketch01.controller;
 
 import pcd.sketch01.model.Board;
+import pcd.sketch01.model.Worker;
 import pcd.sketch01.util.BoundedBuffer;
 import pcd.sketch01.util.BoundedBufferImpl;
 import pcd.sketch01.view.View;
 import pcd.sketch01.view.ViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActiveController extends Thread {
 
