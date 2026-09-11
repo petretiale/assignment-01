@@ -10,7 +10,6 @@ import pcd.executor_version.view.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
 
 public class ActiveController extends Thread {
 
@@ -20,9 +19,9 @@ public class ActiveController extends Thread {
     private View view;
 
     private int nWorkers = Runtime.getRuntime().availableProcessors();
-    private CyclicBarrier startingBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier updateBallBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier resolveCollisionBarrier = new CyclicBarrier(nWorkers + 1);
+    private Barrier startingBarrier = new Barrier(nWorkers + 1);
+    private Barrier updateBallBarrier = new Barrier(nWorkers + 1);
+    private Barrier resolveCollisionBarrier = new Barrier(nWorkers + 1);
 
 
     public ActiveController(Board board, ViewModel viewModel) {
@@ -106,7 +105,7 @@ public class ActiveController extends Thread {
             throw new RuntimeException(e);
         } finally {
             for (Worker w : workers){
-                w.stopRun();
+                w.interrupt();
             }
         }
     }
