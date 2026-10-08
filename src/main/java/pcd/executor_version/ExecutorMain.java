@@ -1,0 +1,83 @@
+package pcd.executor_version;
+
+import pcd.multi_threaded_version.controller.ActiveController;
+import pcd.multi_threaded_version.model.Board;
+import pcd.multi_threaded_version.model.BotAgent;
+import pcd.multi_threaded_version.model.LargeBoardConf;
+import pcd.multi_threaded_version.view.View;
+import pcd.multi_threaded_version.view.ViewModel;
+
+public class ExecutorMain {
+
+	
+	public static void main(String[] argv) {
+
+		/*
+		 * Different board configs to try:
+		 * - minimal: 2 small balls
+		 * - large: 400 small balls
+		 * - massive: 4500 small balls
+		 */
+
+		//var boardConf = new MinimalBoardConf();
+        var boardConf = new LargeBoardConf();
+        //var boardConf = new MassiveBoardConf();
+
+		Board board = new Board();
+		board.init(boardConf);
+
+		ViewModel viewModel = new ViewModel();
+
+        ActiveController controller = new ActiveController(board, viewModel);
+
+        View view = new View(viewModel, controller, 1200, 800);
+
+        BotAgent bot = new BotAgent(controller, board);
+
+        controller.setView(view);
+        controller.start();
+        bot.start();
+
+						
+//		viewModel.update(board, 0);
+//		view.render();
+//		waitAbit();
+//
+//		int nFrames = 0;
+//		long t0 = System.currentTimeMillis();
+//		long lastUpdateTime = System.currentTimeMillis();
+//
+//		/* main simulation loop */
+//
+//		while (true){
+//
+//
+//
+//			/* update board state */
+//
+//			long elapsed = System.currentTimeMillis() - lastUpdateTime;
+//			lastUpdateTime = System.currentTimeMillis();
+//			board.updateState(elapsed);
+//
+//			/* render */
+//
+//			nFrames++;
+//			int framePerSec = 0;
+//			long dt = (System.currentTimeMillis() - t0);
+//			if (dt > 0) {
+//				framePerSec = (int)(nFrames*1000/dt);
+//			}
+//
+//			viewModel.update(board, framePerSec);
+//			view.render();
+//
+//		}
+	}
+//
+//	private static void waitAbit() {
+//		try {
+//			Thread.sleep(2000);
+//		} catch (Exception ex) {}
+//	}
+//
+}
