@@ -13,7 +13,6 @@ public class Board {
     private List<Hole> holes;
     private int humanScore;
     private int botScore;
-
     private boolean gameOver;
     private PlayerId winner;
 
@@ -39,30 +38,11 @@ public class Board {
         holes = List.of(leftHole, rightHole);
     }
     
-    public void updateState(long dt) {
+    public void updateState() {
 
         if (gameOver) {
             return;
         }
-
-    	playerBall.updateState(dt, this);
-        botBall.updateState(dt, this);
-    	for (var b: balls) {
-    		b.updateState(dt, this);
-    	}       	
-    	
-    	for (int i = 0; i < balls.size() - 1; i++) {
-            for (int j = i + 1; j < balls.size(); j++) {
-                Ball.resolveCollision(balls.get(i), balls.get(j));
-            }
-        }
-    	for (var b: balls) {
-    		Ball.resolveCollision(playerBall, b);
-            Ball.resolveCollision(botBall, b);
-    	}
-        // Collisione diretta tra la pallina del giocatore e quella del bot
-        Ball.resolveCollision(playerBall, botBall);
-
         // toglie tutti gli elementi della lista che soddisfano il predicato
 //        balls.removeIf(ball -> isInsideAnyHole(ball));
         var iterator = balls.iterator();
@@ -123,7 +103,7 @@ public class Board {
     public List<Ball> getBalls(){
     	return balls;
     }
-    
+
     public Ball getPlayerBall() {
     	return playerBall;
     }

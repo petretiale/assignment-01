@@ -73,6 +73,14 @@ public class Ball {
      * @param b
      */
     public static void resolveCollision(Ball a, Ball b) {
+        double dx = b.pos.x() - a.pos.x();
+        double dy = b.pos.y() - a.pos.y();
+        double minD = a.radius + b.radius;
+
+        // Evita la radice quadrata se non necessario
+        if ((dx * dx + dy * dy) >= (minD * minD)) {
+            return; // Nessuna collisione, zero lock acquisiti!
+        }
         
     	/* check if there is a collision */
 
@@ -83,17 +91,16 @@ public class Ball {
     	/* compute dv = b.pos - a.pos vector */
         synchronized (first) {
             synchronized (second) {
-                double dx   = b.pos.x() - a.pos.x();
-                double dy   = b.pos.y() - a.pos.y();
-                double dist = Math.hypot(dx, dy);
-                double minD = a.radius + b.radius;
+                dx = b.pos.x() - a.pos.x();
+                dy = b.pos.y() - a.pos.y();
+                double distSq = dx * dx + dy * dy;
 
                 /*
                  * There is a collision if the distance between the two balls is less than the sum of the radii
                  *
                  */
-                if (dist < minD && dist > 1e-6)  {
-
+                if (distSq < minD * minD && distSq > 1e-12)  {
+                    double dist = Math.sqrt(distSq);
                     /*
                      * Collision case - what to do:
                      *
