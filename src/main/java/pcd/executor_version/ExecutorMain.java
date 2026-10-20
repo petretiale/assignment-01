@@ -1,11 +1,9 @@
 package pcd.executor_version;
 
-import pcd.multi_threaded_version.controller.ActiveController;
-import pcd.multi_threaded_version.model.Board;
-import pcd.multi_threaded_version.model.BotAgent;
-import pcd.multi_threaded_version.model.LargeBoardConf;
-import pcd.multi_threaded_version.view.View;
-import pcd.multi_threaded_version.view.ViewModel;
+import pcd.executor_version.controller.ActiveController;
+import pcd.executor_version.model.*;
+import pcd.executor_version.view.View;
+import pcd.executor_version.view.ViewModel;
 
 public class ExecutorMain {
 
@@ -20,8 +18,8 @@ public class ExecutorMain {
 		 */
 
 		//var boardConf = new MinimalBoardConf();
-        var boardConf = new LargeBoardConf();
-        //var boardConf = new MassiveBoardConf();
+        //var boardConf = new LargeBoardConf();
+        var boardConf = new MassiveBoardConf();
 
 		Board board = new Board();
 		board.init(boardConf);
