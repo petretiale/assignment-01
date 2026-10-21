@@ -2,7 +2,6 @@ package pcd.executor_version.controller;
 
 import pcd.executor_version.model.Ball;
 import pcd.executor_version.model.Board;
-import pcd.executor_version.model.Worker;
 import pcd.executor_version.util.BoundedBuffer;
 import pcd.executor_version.util.BoundedBufferImpl;
 import pcd.executor_version.view.View;
@@ -10,6 +9,7 @@ import pcd.executor_version.view.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class ActiveController extends Thread {
 
@@ -18,17 +18,15 @@ public class ActiveController extends Thread {
     private final ViewModel viewModel;
     private View view;
 
-    private int nWorkers = Runtime.getRuntime().availableProcessors();
-    private Barrier startingBarrier = new Barrier(nWorkers + 1);
-    private Barrier updateBallBarrier = new Barrier(nWorkers + 1);
-    private Barrier resolveCollisionBarrier = new Barrier(nWorkers + 1);
-
+    private final int nTasks;
+    private final ExecutorService executor;
 
     public ActiveController(Board board, ViewModel viewModel) {
         this.cmdBuffer = new BoundedBufferImpl<>(100);
         this.board = board;
         this.viewModel = viewModel;
-
+        this.nTasks = Runtime.getRuntime().availableProcessors();
+        this.executor = Executors.newFixedThreadPool(nTasks);
     }
 
     public void setView(View view) {
@@ -37,7 +35,6 @@ public class ActiveController extends Thread {
 
     @Override
     public void run() {
-
         viewModel.update(board, 0);
         view.render();
         waitAbit();
@@ -46,54 +43,75 @@ public class ActiveController extends Thread {
         long t0 = System.currentTimeMillis();
         long lastUpdateTime = System.currentTimeMillis();
 
-        List<Worker> workers = new ArrayList<>();
-        for (int i = 0; i < nWorkers; i++) {
-            Worker w = new Worker(i, board, startingBarrier, updateBallBarrier, resolveCollisionBarrier);
-            workers.add(w);
-            w.start();
-        }
-
         Ball playerBall = board.getPlayerBall();
         Ball botBall = board.getBotBall();
 
         try {
-            while (true) {
+            while (!board.isGameOver()) {
                 long current = System.currentTimeMillis();
                 long elapsed = current - lastUpdateTime;
                 lastUpdateTime = current;
 
-                // Esecuzione dei comandi in coda
                 Cmd cmd;
                 while ((cmd = cmdBuffer.poll()) != null) {
                     cmd.execute(board);
                 }
 
-                int nBalls = board.getBalls().size();
-                for (int i = 0; i < nWorkers; i++) {
-                    Worker w = workers.get(i);
-                    int startBall = (i * nBalls) / nWorkers;
-                    int lastBall = ((i + 1) * nBalls / nWorkers) - 1;
-                    w.setBallsSection(startBall, lastBall, nBalls);
-                    w.setDt(elapsed);
+                List<Ball> balls = board.getBalls();
+                int totalBalls = balls.size();
+
+                if (totalBalls > 0) {
+                    // TASK DI MOVIMENTO
+                    List<Future<?>> moveTasks = new ArrayList<>();
+
+                    for (int i = 0; i < nTasks; i++) {
+                        int start = (i * totalBalls) / nTasks;
+                        int end = Math.min((((i + 1) * totalBalls) / nTasks) - 1, totalBalls - 1);
+
+                        if (start < totalBalls && start <= end) {
+                            UpdatePosTask task = new UpdatePosTask(balls, start, end, elapsed, board);
+                            moveTasks.add(executor.submit(task));
+                        }
+                    }
+
+                    // Aspettiamo che tutti i task di movimento finiscano
+                    for (Future<?> f : moveTasks) {
+                        f.get();
+                    }
+
+                    if (playerBall != null) playerBall.updateState(elapsed, board);
+                    if (botBall != null) botBall.updateState(elapsed, board);
+
+
+                    // TASK DI COLLISIONE
+                    List<Future<?>> collisionFutures = new ArrayList<>();
+
+                    for (int i = 0; i < nTasks; i++) {
+                        int start = (i * totalBalls) / nTasks;
+                        int end = Math.min((((i + 1) * totalBalls) / nTasks) - 1, totalBalls - 1);
+
+                        if (start < totalBalls && start <= end) {
+                            CollisionTask task = new CollisionTask(balls, start, end, totalBalls);
+                            collisionFutures.add(executor.submit(task));
+                        }
+                    }
+                    for (Future<?> f : collisionFutures) {
+                        f.get();
+                    }
                 }
-                startingBarrier.await();
-                playerBall.updateState(elapsed, board);
-                botBall.updateState(elapsed, board);
-                updateBallBarrier.await();
-                for (var b: board.getBalls()) {
-                    Ball.resolveCollision(playerBall, b);
-                    Ball.resolveCollision(botBall, b);
+                for (var b : board.getBalls()) {
+                    if (playerBall != null) Ball.resolveCollision(playerBall, b);
+                    if (botBall != null) Ball.resolveCollision(botBall, b);
                 }
-                // Collisione diretta tra la pallina del giocatore e quella del bot
-                Ball.resolveCollision(playerBall, botBall);
-                resolveCollisionBarrier.await();
+                if (playerBall != null && botBall != null) {
+                    Ball.resolveCollision(playerBall, botBall);
+                }
 
                 board.updateState();
 
-                // Calcolo FPS
                 nFrames++;
+                long dt = System.currentTimeMillis() - t0;
                 int framePerSec = 0;
-                long dt = current - t0;
                 if (dt > 0) {
                     framePerSec = (int) (nFrames * 1000 / dt);
                 }
@@ -102,11 +120,22 @@ public class ActiveController extends Thread {
                 view.render();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            System.err.println("Gioco interrotto o errore: " + e.getMessage());
         } finally {
-            for (Worker w : workers){
-                w.interrupt();
+            shutdownExecutor();
+        }
+    }
+
+
+    private void shutdownExecutor() {
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
             }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
         }
     }
 

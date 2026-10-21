@@ -73,6 +73,8 @@ public class Ball {
      * @param b
      */
     public static void resolveCollision(Ball a, Ball b) {
+
+        // todo: da riguardare (race condition)
         double dx = b.pos.x() - a.pos.x();
         double dy = b.pos.y() - a.pos.y();
         double minD = a.radius + b.radius;
