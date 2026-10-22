@@ -7,10 +7,11 @@ import pcd.executor_version.util.BoundedBufferImpl;
 import pcd.executor_version.view.View;
 import pcd.executor_version.view.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 public class ActiveController extends Thread {
 
@@ -43,6 +44,8 @@ public class ActiveController extends Thread {
 
         Ball playerBall = board.getPlayerBall();
         Ball botBall = board.getBotBall();
+        int nThreads = Runtime.getRuntime().availableProcessors();
+        ExecutorService exec = Executors.newFixedThreadPool(nThreads + 1);
 
         try {
             while (true) {
@@ -55,30 +58,26 @@ public class ActiveController extends Thread {
                 while ((cmd = cmdBuffer.poll()) != null) {
                     cmd.execute(board);
                 }
-                ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
+                List<Future<?>> updateTasks = new ArrayList<>();
                 for (Ball b : board.getBalls()) {
-                    exec.execute(() -> {
-                        b.updateState(elapsed, board);
-                    });
+                    UpdateStateTask task = new UpdateStateTask(board, b, elapsed);
+                    updateTasks.add(exec.submit(task));
                 }
-                exec.shutdown();
-                exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-                exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
+                for (Future<?> f : updateTasks){
+                    f.get();
+                }
                 playerBall.updateState(elapsed, board);
                 botBall.updateState(elapsed, board);
                 List<Ball> balls = board.getBalls();
                 int nBalls = balls.size();
+                List<Future<?>> collisionTasks = new ArrayList<>();
                 for (int i = 0; i < nBalls; i++) {
-                    Ball bI = balls.get(i);
-                    for (int j = i + 1; j < nBalls; j++) {
-                        Ball bJ = balls.get(j);
-                        exec.execute(() ->{
-                            Ball.resolveCollision(bI, bJ);
-                        });
-                    }
+                    ResolveCollisionTask task = new ResolveCollisionTask(balls, i);
+                    collisionTasks.add(exec.submit(task));
                 }
-                exec.shutdown();
-                exec.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+                for (Future<?> f : collisionTasks){
+                    f.get();
+                }
                 for (var b: board.getBalls()) {
                     Ball.resolveCollision(playerBall, b);
                     Ball.resolveCollision(botBall, b);
