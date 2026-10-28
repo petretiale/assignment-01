@@ -1,9 +1,9 @@
 package pcd.executor_version;
 
-import pcd.executor_version.controller.ActiveController;
-import pcd.executor_version.model.*;
-import pcd.executor_version.view.View;
-import pcd.executor_version.view.ViewModel;
+import pcd.executor_version.controller.ExecActiveController;
+import pcd.shared.model.*;
+import pcd.shared.view.View;
+import pcd.shared.view.ViewModel;
 
 public class ExecutorMain {
 
@@ -26,7 +26,7 @@ public class ExecutorMain {
 
 		ViewModel viewModel = new ViewModel();
 
-        ActiveController controller = new ActiveController(board, viewModel);
+        ExecActiveController controller = new ExecActiveController(board, viewModel);
 
         View view = new View(viewModel, controller, 1200, 800);
 
@@ -35,47 +35,5 @@ public class ExecutorMain {
         controller.setView(view);
         controller.start();
         bot.start();
-
-						
-//		viewModel.update(board, 0);
-//		view.render();
-//		waitAbit();
-//
-//		int nFrames = 0;
-//		long t0 = System.currentTimeMillis();
-//		long lastUpdateTime = System.currentTimeMillis();
-//
-//		/* main simulation loop */
-//
-//		while (true){
-//
-//
-//
-//			/* update board state */
-//
-//			long elapsed = System.currentTimeMillis() - lastUpdateTime;
-//			lastUpdateTime = System.currentTimeMillis();
-//			board.updateState(elapsed);
-//
-//			/* render */
-//
-//			nFrames++;
-//			int framePerSec = 0;
-//			long dt = (System.currentTimeMillis() - t0);
-//			if (dt > 0) {
-//				framePerSec = (int)(nFrames*1000/dt);
-//			}
-//
-//			viewModel.update(board, framePerSec);
-//			view.render();
-//
-//		}
 	}
-//
-//	private static void waitAbit() {
-//		try {
-//			Thread.sleep(2000);
-//		} catch (Exception ex) {}
-//	}
-//
 }
