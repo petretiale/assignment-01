@@ -1,6 +1,6 @@
-package pcd.shared.commands;
+package pcd.common.commands;
 
-import pcd.shared.model.Board;
+import pcd.common.model.Board;
 
 public interface Cmd {
 

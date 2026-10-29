@@ -1,15 +1,15 @@
 package pcd.executor_version.controller;
 
-import pcd.shared.commands.Cmd;
-import pcd.shared.controller.ActiveController;
-import pcd.shared.model.Ball;
-import pcd.shared.model.Board;
+import pcd.common.commands.Cmd;
+import pcd.common.controller.ActiveController;
+import pcd.common.model.Ball;
+import pcd.common.model.Board;
 import pcd.executor_version.task.ResolveCollisionTask;
 import pcd.executor_version.task.UpdateStateTask;
-import pcd.shared.util.BoundedBuffer;
-import pcd.shared.util.BoundedBufferImpl;
-import pcd.shared.view.View;
-import pcd.shared.view.ViewModel;
+import pcd.common.util.BoundedBuffer;
+import pcd.common.util.BoundedBufferImpl;
+import pcd.common.view.View;
+import pcd.common.view.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

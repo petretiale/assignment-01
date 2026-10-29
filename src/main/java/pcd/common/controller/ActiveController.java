@@ -1,7 +1,7 @@
-package pcd.shared.controller;
+package pcd.common.controller;
 
-import pcd.shared.commands.Cmd;
-import pcd.shared.view.View;
+import pcd.common.commands.Cmd;
+import pcd.common.view.View;
 
 public interface ActiveController {
     void setView(View view);

@@ -1,7 +1,7 @@
-package pcd.shared.model;
+package pcd.common.model;
 
-import pcd.shared.commands.*;
-import pcd.shared.controller.ActiveController;
+import pcd.common.commands.*;
+import pcd.common.controller.ActiveController;
 
 import java.util.Random;
 

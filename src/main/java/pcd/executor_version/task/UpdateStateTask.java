@@ -1,7 +1,7 @@
 package pcd.executor_version.task;
 
-import pcd.shared.model.Ball;
-import pcd.shared.model.Board;
+import pcd.common.model.Ball;
+import pcd.common.model.Board;
 
 public class UpdateStateTask implements Task{
 

@@ -1,8 +1,8 @@
-package pcd.shared.view;
+package pcd.common.view;
 
-import pcd.shared.commands.*;
-import pcd.shared.controller.*;
-import pcd.shared.model.PlayerId;
+import pcd.common.commands.*;
+import pcd.common.controller.*;
+import pcd.common.model.PlayerId;
 
 import javax.swing.*;
 import java.awt.*;

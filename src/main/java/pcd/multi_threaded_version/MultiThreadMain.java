@@ -1,9 +1,9 @@
 package pcd.multi_threaded_version;
 
 import pcd.multi_threaded_version.controller.MTActiveController;
-import pcd.shared.model.*;
-import pcd.shared.view.View;
-import pcd.shared.view.ViewModel;
+import pcd.common.model.*;
+import pcd.common.view.View;
+import pcd.common.view.ViewModel;
 
 public class MultiThreadMain {
 

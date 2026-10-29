@@ -1,9 +1,9 @@
 package pcd.executor_version;
 
 import pcd.executor_version.controller.ExecActiveController;
-import pcd.shared.model.*;
-import pcd.shared.view.View;
-import pcd.shared.view.ViewModel;
+import pcd.common.model.*;
+import pcd.common.view.View;
+import pcd.common.view.ViewModel;
 
 public class ExecutorMain {
 

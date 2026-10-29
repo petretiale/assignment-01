@@ -1,4 +1,4 @@
-package pcd.shared.model;
+package pcd.common.model;
 
 import java.util.ArrayList;
 import java.util.List;

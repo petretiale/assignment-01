@@ -1,4 +1,4 @@
-package pcd.shared.model;
+package pcd.common.model;
 
 public record P2d(double x, double y)  {
 

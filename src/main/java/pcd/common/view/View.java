@@ -1,7 +1,7 @@
-package pcd.shared.view;
+package pcd.common.view;
 
 
-import pcd.shared.controller.ActiveController;
+import pcd.common.controller.ActiveController;
 
 public class View {
 

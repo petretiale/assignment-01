@@ -1,9 +1,9 @@
-package pcd.shared.view;
+package pcd.common.view;
 
-import pcd.shared.model.Board;
-import pcd.shared.model.Hole;
-import pcd.shared.model.P2d;
-import pcd.shared.model.PlayerId;
+import pcd.common.model.Board;
+import pcd.common.model.Hole;
+import pcd.common.model.P2d;
+import pcd.common.model.PlayerId;
 
 import java.util.ArrayList;
 import java.util.List;

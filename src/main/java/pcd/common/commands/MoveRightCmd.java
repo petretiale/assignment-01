@@ -1,8 +1,8 @@
-package pcd.shared.commands;
+package pcd.common.commands;
 
-import pcd.shared.model.Board;
-import pcd.shared.model.PlayerId;
-import pcd.shared.model.V2d;
+import pcd.common.model.Board;
+import pcd.common.model.PlayerId;
+import pcd.common.model.V2d;
 
 public class MoveRightCmd implements Cmd {
 

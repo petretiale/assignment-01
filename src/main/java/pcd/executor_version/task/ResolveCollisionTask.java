@@ -1,6 +1,6 @@
 package pcd.executor_version.task;
 
-import pcd.shared.model.Ball;
+import pcd.common.model.Ball;
 
 import java.util.List;
 

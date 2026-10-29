@@ -1,7 +1,7 @@
 package pcd.multi_threaded_version.util;
 
-import pcd.shared.model.Ball;
-import pcd.shared.model.Board;
+import pcd.common.model.Ball;
+import pcd.common.model.Board;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
@@ -48,8 +48,15 @@ public class Worker extends Thread {
 
                 updateBallBarrier.await();
                 for (int i = startBall; i <= lastBall; i++) {
-                    for (int j = i + 1; j < totalBalls; j++) {
-                        Ball.resolveCollision(balls.get(i), balls.get(j));
+                    Ball bI = balls.get(i);
+                    for (int step = 1; step <= ((totalBalls - 1) / 2); step++) {
+                        int indexJ = (i + step) % totalBalls;
+                        Ball.resolveCollision(bI, balls.get(indexJ));
+                    }
+
+                    if ((totalBalls % 2 == 0) && i < totalBalls / 2) {
+                        int oppositeIndex = i + (totalBalls / 2);
+                        Ball.resolveCollision(bI, balls.get(oppositeIndex));
                     }
                 }
 

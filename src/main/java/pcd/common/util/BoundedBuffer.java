@@ -1,4 +1,4 @@
-package pcd.shared.util;
+package pcd.common.util;
 
 public interface BoundedBuffer<Item> {
 
