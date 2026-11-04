@@ -1,6 +1,7 @@
 package pcd.multi_threaded_version.controller;
 
 import pcd.multi_threaded_version.model.Ball;
+import pcd.multi_threaded_version.model.Barrier;
 import pcd.multi_threaded_version.model.Board;
 import pcd.multi_threaded_version.model.Worker;
 import pcd.multi_threaded_version.util.BoundedBuffer;
@@ -19,11 +20,10 @@ public class ActiveController extends Thread {
     private final ViewModel viewModel;
     private View view;
 
-    private int nWorkers = Runtime.getRuntime().availableProcessors();
-    private CyclicBarrier startingBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier updateBallBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier resolveCollisionBarrier = new CyclicBarrier(nWorkers + 1);
-
+    private int nWorkers = Runtime.getRuntime().availableProcessors() + 1;
+    private Barrier startingBarrier = new Barrier(nWorkers + 1);
+    private Barrier updateBallBarrier = new Barrier(nWorkers + 1);
+    private Barrier resolveCollisionBarrier = new Barrier(nWorkers + 1);
 
     public ActiveController(Board board, ViewModel viewModel) {
         this.cmdBuffer = new BoundedBufferImpl<>(100);

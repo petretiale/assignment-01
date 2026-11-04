@@ -1,4 +1,4 @@
-package pcd.executor_version.model;
+package pcd.multi_threaded_version.model;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
@@ -16,11 +16,11 @@ public class Worker extends Thread {
     int lastBall;
     private int totalBalls;
 
-    private CyclicBarrier startBarrier;
-    private CyclicBarrier updateBallBarrier;
-    private CyclicBarrier resolveCollisionBarrier;
+    private Barrier startBarrier;
+    private Barrier updateBallBarrier;
+    private Barrier resolveCollisionBarrier;
 
-    public Worker(int workerId, Board board, CyclicBarrier sB, CyclicBarrier uB, CyclicBarrier rB){
+    public Worker(int workerId, Board board, Barrier sB, Barrier uB, Barrier rB){
         super("Worker" + workerId);
         this.workerId = workerId;
         this.balls = board.getBalls();
@@ -52,8 +52,8 @@ public class Worker extends Thread {
 
                 resolveCollisionBarrier.await();
             }
-        } catch (InterruptedException | BrokenBarrierException e) {
-            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();;
         }
     }
 
