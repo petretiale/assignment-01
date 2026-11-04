@@ -94,8 +94,7 @@ public class Board {
         for (var h : holes) {
             double dx   = ball.getPos().x() - h.pos().x();
             double dy   = ball.getPos().y() - h.pos().y();
-            double dist = Math.hypot(dx, dy);
-            if(dist < h.radius()) return true;
+            if ((dx * dx + dy * dy) < (h.radius() * h.radius())) return true;
         }
         return false;
     }
