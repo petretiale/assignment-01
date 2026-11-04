@@ -25,7 +25,7 @@ public class ActiveController extends Thread {
         this.cmdBuffer = new BoundedBufferImpl<>(100);
         this.board = board;
         this.viewModel = viewModel;
-        this.nTasks = Runtime.getRuntime().availableProcessors();
+        this.nTasks = Runtime.getRuntime().availableProcessors() + 1;
         this.executor = Executors.newFixedThreadPool(nTasks);
     }
 

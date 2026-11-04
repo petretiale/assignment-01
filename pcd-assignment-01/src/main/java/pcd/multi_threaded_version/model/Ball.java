@@ -75,14 +75,11 @@ public class Ball {
     public static void resolveCollision(Ball a, Ball b) {
 
         // todo: da riguardare (race condition)
-        double dx = b.pos.x() - a.pos.x();
-        double dy = b.pos.y() - a.pos.y();
-        double minD = a.radius + b.radius;
 
-        // Evita la radice quadrata se non necessario
-        if ((dx * dx + dy * dy) >= (minD * minD)) {
-            return; // Nessuna collisione, zero lock acquisiti!
-        }
+//        // Evita la radice quadrata se non necessario
+//        if ((dx * dx + dy * dy) >= (minD * minD)) {
+//            return; // Nessuna collisione, zero lock acquisiti!
+//        }
         
     	/* check if there is a collision */
 
@@ -93,8 +90,11 @@ public class Ball {
     	/* compute dv = b.pos - a.pos vector */
         synchronized (first) {
             synchronized (second) {
-                dx = b.pos.x() - a.pos.x();
-                dy = b.pos.y() - a.pos.y();
+
+                double minD = a.radius + b.radius;
+
+                double dx = b.pos.x() - a.pos.x();
+                double dy = b.pos.y() - a.pos.y();
                 double distSq = dx * dx + dy * dy;
 
                 /*
