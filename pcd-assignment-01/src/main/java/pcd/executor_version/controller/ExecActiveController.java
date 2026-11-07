@@ -64,8 +64,12 @@ public class ExecActiveController extends Thread implements ActiveController {
                     cmd.execute(board);
                 }
                 List<Future<?>> updateTasks = new ArrayList<>();
-                for (Ball b : board.getBalls()) {
-                    UpdateStateTask task = new UpdateStateTask(board, b, elapsed);
+                List<Ball> balls = board.getBalls();
+                int nBalls = balls.size();
+                int BATCH_SIZE = 50;
+                for (int first_idx = 0; first_idx < nBalls / 10 ; first_idx += BATCH_SIZE) {
+                    int last_idx = Math.min(first_idx + BATCH_SIZE, nBalls);
+                    UpdateStateTask task = new UpdateStateTask(board, balls.subList(first_idx, last_idx), elapsed);
                     updateTasks.add(exec.submit(task));
                 }
                 for (Future<?> f : updateTasks){
@@ -73,8 +77,6 @@ public class ExecActiveController extends Thread implements ActiveController {
                 }
                 playerBall.updateState(elapsed, board);
                 botBall.updateState(elapsed, board);
-                List<Ball> balls = board.getBalls();
-                int nBalls = balls.size();
                 List<Future<?>> collisionTasks = new ArrayList<>();
                 for (int i = 0; i < nBalls; i++) {
                     ResolveCollisionTask task = new ResolveCollisionTask(balls, i);

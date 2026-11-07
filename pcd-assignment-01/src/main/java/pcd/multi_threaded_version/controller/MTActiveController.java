@@ -5,6 +5,7 @@ import pcd.common.controller.ActiveController;
 import pcd.common.model.Ball;
 import pcd.common.model.Board;
 import pcd.multi_threaded_version.util.Worker;
+import pcd.multi_threaded_version.util.Barrier;
 import pcd.common.util.BoundedBuffer;
 import pcd.common.util.BoundedBufferImpl;
 import pcd.common.view.View;
@@ -12,7 +13,6 @@ import pcd.common.view.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CyclicBarrier;
 
 public class MTActiveController extends Thread implements ActiveController {
 
@@ -22,9 +22,9 @@ public class MTActiveController extends Thread implements ActiveController {
     private View view;
 
     private int nWorkers = Runtime.getRuntime().availableProcessors();
-    private CyclicBarrier startingBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier updateBallBarrier = new CyclicBarrier(nWorkers + 1);
-    private CyclicBarrier resolveCollisionBarrier = new CyclicBarrier(nWorkers + 1);
+    private Barrier startingBarrier = new Barrier(nWorkers + 1);
+    private Barrier updateBallBarrier = new Barrier(nWorkers + 1);
+    private Barrier resolveCollisionBarrier = new Barrier(nWorkers + 1);
 
 
     public MTActiveController(Board board, ViewModel viewModel) {

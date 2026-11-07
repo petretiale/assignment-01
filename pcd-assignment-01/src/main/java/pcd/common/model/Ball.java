@@ -4,6 +4,7 @@ public class Ball {
 
     private int id;
     private P2d pos;
+    private P2d snapshotPos;
     private V2d vel;
     private double radius;
     private double mass;
@@ -16,6 +17,7 @@ public class Ball {
     public Ball(int id, P2d pos, double radius, double mass, V2d vel, PlayerId owner) {
         this.id = id;
         this.pos = pos;
+        this.snapshotPos = pos;
         this.radius = radius;
         this.mass = mass;
         this.vel = vel;
@@ -36,6 +38,8 @@ public class Ball {
         }
         pos = pos.sum(vel.mul(dt_scaled));
      	applyBoundaryConstraints(ctx);
+
+        this.snapshotPos = this.pos;
     }
     //todo: (possibile race condition)
     public synchronized void kick(V2d vel) {
@@ -73,27 +77,23 @@ public class Ball {
      * @param b
      */
     public static void resolveCollision(Ball a, Ball b) {
-//        double dx = b.pos.x() - a.pos.x();
-//        double dy = b.pos.y() - a.pos.y();
-//        double minD = a.radius + b.radius;
-//
-//        // Evita la radice quadrata se non necessario
-//        if ((dx * dx + dy * dy) >= (minD * minD)) {
-//            return; // Nessuna collisione, zero lock acquisiti!
-//        }
-        
-    	/* check if there is a collision */
+        double dx = b.snapshotPos.x() - a.snapshotPos.x();
+        double dy = b.snapshotPos.y() - a.snapshotPos.y();
+        double minD = a.radius + b.radius;
+        double broadMinD = minD * 5; //DA CAPIRE SE HA SENSO
 
-        // 1. Ordiniamo i lock in base all'ID per prevenire deadlock
+        if ((dx * dx + dy * dy) >= (broadMinD * broadMinD)) {
+            return;
+        }
+
         Ball first  = (a.getId() < b.getId()) ? a : b;
         Ball second = (a.getId() < b.getId()) ? b : a;
     	
     	/* compute dv = b.pos - a.pos vector */
         synchronized (first) {
             synchronized (second) {
-                double dx = b.pos.x() - a.pos.x();
-                double dy = b.pos.y() - a.pos.y();
-                double minD = a.radius + b.radius;
+                dx = b.pos.x() - a.pos.x();
+                dy = b.pos.y() - a.pos.y();
                 double distSq = dx * dx + dy * dy;
 
                 /*

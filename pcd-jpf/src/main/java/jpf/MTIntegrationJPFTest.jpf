@@ -1,4 +1,4 @@
-target = jpf.LockOrderingJPFTest
+target = jpf.MTIntegrationJPFTest
 
 classpath = /pcd-jpf/target/classes
 
