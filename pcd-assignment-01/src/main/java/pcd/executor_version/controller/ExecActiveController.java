@@ -66,10 +66,8 @@ public class ExecActiveController extends Thread implements ActiveController {
                 List<Future<?>> updateTasks = new ArrayList<>();
                 List<Ball> balls = board.getBalls();
                 int nBalls = balls.size();
-                int BATCH_SIZE = 50;
-                for (int first_idx = 0; first_idx < nBalls / 10 ; first_idx += BATCH_SIZE) {
-                    int last_idx = Math.min(first_idx + BATCH_SIZE, nBalls);
-                    UpdateStateTask task = new UpdateStateTask(board, balls.subList(first_idx, last_idx), elapsed);
+                for (Ball b : board.getBalls()) {
+                    UpdateStateTask task = new UpdateStateTask(board, b, elapsed);
                     updateTasks.add(exec.submit(task));
                 }
                 for (Future<?> f : updateTasks){

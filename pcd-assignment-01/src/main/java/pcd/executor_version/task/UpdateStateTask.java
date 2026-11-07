@@ -8,20 +8,18 @@ import java.util.List;
 public class UpdateStateTask implements Task{
 
 
-    private final List<Ball> balls;
+    private final Ball ball;
     private final long dt;
     private Board board;
 
-    public UpdateStateTask(Board board, List<Ball> b, long elapsed){
+    public UpdateStateTask(Board board, Ball b, long elapsed){
         this.board = board;
-        this.balls = b;
+        this.ball = b;
         this.dt = elapsed;
     }
 
     @Override
     public void run() {
-        for (Ball b : this.balls){
-            b.updateState(this.dt, this.board);
-        }
+        ball.updateState(this.dt, this.board);
     }
 }

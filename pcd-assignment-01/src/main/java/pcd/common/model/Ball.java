@@ -80,7 +80,7 @@ public class Ball {
         double dx = b.snapshotPos.x() - a.snapshotPos.x();
         double dy = b.snapshotPos.y() - a.snapshotPos.y();
         double minD = a.radius + b.radius;
-        double broadMinD = minD * 5; //DA CAPIRE SE HA SENSO
+        double broadMinD = minD * 10; //DA CAPIRE SE HA SENSO
 
         if ((dx * dx + dy * dy) >= (broadMinD * broadMinD)) {
             return;
