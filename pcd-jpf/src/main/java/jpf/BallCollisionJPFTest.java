@@ -4,21 +4,25 @@ public class BallCollisionJPFTest {
 
     static class MockBall {
         private final int id;
-        public double x, y; // Stato condiviso vulnerabile
+        public double x, y, snapshotX, snapshotY;
 
         public MockBall(int id, double x, double y) {
             this.id = id;
             this.x = x;
             this.y = y;
+            this.snapshotX = x;
+            this.snapshotY = y;
         }
         public int getId() { return id; }
     }
 
     public static void resolveCollision(MockBall a, MockBall b) {
-        // Data Race voluta: lettura senza lock
-        double dx = b.x - a.x;
-        double dy = b.y - a.y;
+        double dx = b.snapshotX - a.snapshotX;
+        double dy = b.snapshotY - a.snapshotY;
 
+        if (dx * dx + dy * dy >= 25) {
+            return;
+        }
         MockBall first = (a.getId() < b.getId()) ? a : b;
         MockBall second = (a.getId() < b.getId()) ? b : a;
 
@@ -29,8 +33,10 @@ public class BallCollisionJPFTest {
                 dy = b.y - a.y;
 
                 // Simula l'aggiornamento di stato
-                a.x += 1;
-                b.x -= 1;
+                if (dx * dx + dy * dy < 25) {
+                    a.x += 1;
+                    b.x -= 1;
+                }
             }
         }
     }
