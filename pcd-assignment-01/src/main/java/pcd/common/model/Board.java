@@ -38,7 +38,7 @@ public class Board {
         holes = List.of(leftHole, rightHole);
     }
     
-    public void updateState() {
+    public synchronized void updateState() {
 
         if (gameOver) {
             return;
@@ -123,7 +123,7 @@ public class Board {
 
     public int getBotScore() { return botScore; }
 
-    public boolean isGameOver() { return gameOver; }
+    public synchronized boolean isGameOver() { return gameOver; }
 
     public PlayerId getWinner() { return winner; }
 }

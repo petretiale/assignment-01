@@ -61,7 +61,7 @@ public class MTActiveController extends Thread implements ActiveController {
         Ball botBall = board.getBotBall();
 
         try {
-            while (true) {
+            while (!board.isGameOver()) {
                 long current = System.currentTimeMillis();
                 long elapsed = current - lastUpdateTime;
                 lastUpdateTime = current;

@@ -53,7 +53,7 @@ public class ExecActiveController extends Thread implements ActiveController {
         ExecutorService exec = Executors.newFixedThreadPool(nThreads + 1);
 
         try {
-            while (true) {
+            while (!board.isGameOver()) {
                 long current = System.currentTimeMillis();
                 long elapsed = current - lastUpdateTime;
                 lastUpdateTime = current;
