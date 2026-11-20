@@ -105,7 +105,7 @@ public class ExecActiveController extends Thread implements ActiveController {
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
+        } finally { exec.shutdown(); }
     }
 
     @Override

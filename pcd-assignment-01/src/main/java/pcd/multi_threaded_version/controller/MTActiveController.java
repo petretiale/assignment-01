@@ -108,8 +108,16 @@ public class MTActiveController extends Thread implements ActiveController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            for (Worker w : workers){
+            for (Worker w : workers) {
                 w.stopRun();
+                w.interrupt();
+            }
+            for (Worker w : workers) {
+                try {
+                    w.join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
     }
