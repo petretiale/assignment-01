@@ -4,8 +4,6 @@ import pcd.common.model.Ball;
 import pcd.common.model.Board;
 
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 
 public class Worker extends Thread {
 
@@ -63,7 +61,7 @@ public class Worker extends Thread {
                 resolveCollisionBarrier.await();
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Thread.currentThread().interrupt();
         }
     }
 
